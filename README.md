@@ -1,16 +1,30 @@
 # wiifit-lab
 
-Wii Fit バランスボードを PC につなぐ、自作アプリ群のソースだ。
+Wii Fit バランスボードの中身を読んで、PC 向けの別のものに作り替えた記録だ。
+
+Bluetooth HID の通信を直接読み、ボードが返す生の値を取り出して、計測ツール、ゲーム、ペダル、VRChat の入力装置にしている。
+
+English: I opened up the Wii Balance Board at the protocol level (raw Bluetooth HID reports, factory calibration data, temperature correction) and rebuilt it as a measurement tool, a set of minigames, a pedal controller, and a VRChat input device.
+
+## やったこと
+
+- **生の通信を読む**: 4つの荷重センサーの 16-bit 生値を、通信レポート単位(実機で約100回/秒)で取り出している。
+- **ボード内部の値を使う**: ボードの個体ごとに持つ 0 / 17 / 34 kg の工場校正点を読み、区間ごとの感度を計算して重量を出す。内部温度と工場基準温度から温度補正も掛け、補正前後の重量を並べて確認できる。
+- **見える化する**: 技術モニターで、各センサーの生値、実測の受信周波数、重量・重心・温度の直近60秒の波形を表示する。診断画面と CSV 記録も付けた。
+- **入力装置に作り替える**: 左足がブレーキ、右足がアクセルの疑似ペダル(キー入力と vJoy のアナログ出力)。重心移動で遊ぶブロック崩し、ホバーレース、3D バランステーブル、サイドスタンスのスノーボードなどのミニゲーム。
+- **VRChat につなぐ**: 歩行・スキー・スノーボードの動きをボードの重心から作り、VRChat 公式の OSC で送るブリッジ。80ms フィルター、モードごとの校正、250ms 信号が途切れたら出力をゼロに戻す安全条件を入れた。確認用の VRChat ワールドも作った。
+
+関連: Wii Fit を Windows の巨大なトラックパッドにする [wiifit-trackpad](https://github.com/bruiselea/wiifit-trackpad)。
+
+## 中身
 
 | フォルダ | 内容 |
 |---|---|
-| `WiiFitLab/work/wii-fit-lab` | バランスボードの計測・診断・ミニゲームを備えた Windows アプリ(WPF)。4隅の荷重、重心、温度補正、CSV記録、技術モニター、疑似ペダル、ミニゲームを含む。v0.10.0 |
-| `WiiFitVRBridge` | 歩行・スキー・スノーボードの入力を VRChat 公式の OSC に送るブリッジ。v0.1.0 |
+| `WiiFitLab/work/wii-fit-lab` | 計測・診断・ミニゲーム・疑似ペダルを備えた Windows アプリ(WPF)。v0.10.0 |
+| `WiiFitVRBridge` | 歩行・スキー・スノーボードの入力を VRChat の OSC に送るブリッジ。v0.1.0 |
 | `WiiFitVRBridge/world/WiiFitMotionLab` | ブリッジの動作確認用の VRChat ワールド(Unity 2022.3.22f1 / VRChat Worlds SDK 3.10.4) |
 
 C# / .NET 8 / WPF / Unity。
-
-English: source of my Wii Balance Board apps for Windows: a measurement, diagnostics and minigame app, and a bridge that sends walking / ski / snowboard input to VRChat over OSC.
 
 ## 他人のコードについて(重要)
 
