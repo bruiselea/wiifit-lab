@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AssemblyName>WiiFitVRBridge</AssemblyName>
+    <RootNamespace>WiiFitVRBridge.App</RootNamespace>
+    <Version>0.1.0</Version>
+    <FileVersion>0.1.0.0</FileVersion>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WiiFitVRBridge.Core\WiiFitVRBridge.Core.csproj" />
+    <ProjectReference Include="..\..\..\WiiFitLab\work\reference-balance-board-controller\src\BalanceBoard.Core\BalanceBoard.Core.csproj" />
+    <ProjectReference Include="..\..\..\WiiFitLab\work\wiimotelib-decompiled\WiimoteLib.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="THIRD_PARTY_NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="UseSafeWiimoteLib" AfterTargets="Build">
+    <Copy SourceFiles="..\..\..\WiiFitLab\work\wiimotelib-decompiled\bin\$(Configuration)\net8.0-windows\WiimoteLib.dll"
+          DestinationFiles="$(OutDir)WiimoteLib.dll" />
+    <Copy SourceFiles="..\..\..\WiiFitLab\work\wiimotelib-decompiled\LICENSE.BrianPeek.txt"
+          DestinationFiles="$(OutDir)LICENSE.WiimoteLib.txt" />
+  </Target>
+  <Target Name="UseSafeWiimoteLibAfterPublish" AfterTargets="Publish">
+    <Copy SourceFiles="..\..\..\WiiFitLab\work\wiimotelib-decompiled\bin\$(Configuration)\net8.0-windows\WiimoteLib.dll"
+          DestinationFiles="$(PublishDir)WiimoteLib.dll" />
+    <Copy SourceFiles="..\..\..\WiiFitLab\work\wiimotelib-decompiled\LICENSE.BrianPeek.txt"
+          DestinationFiles="$(PublishDir)LICENSE.WiimoteLib.txt" />
+  </Target>
+</Project>

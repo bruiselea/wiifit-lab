@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>WiiFitLab</AssemblyName>
+    <RootNamespace>WiiFitLab</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Version>0.10.0</Version>
+    <FileVersion>0.10.0.0</FileVersion>
+    <AssemblyVersion>0.10.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\reference-balance-board-controller\src\BalanceBoard.Core\BalanceBoard.Core.csproj" />
+    <ProjectReference Include="..\wiimotelib-decompiled\WiimoteLib.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="THIRD_PARTY_NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="README.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\balance-table-aurora.png" />
+  </ItemGroup>
+
+  <Target Name="UseSafeWiimoteLib" AfterTargets="Build">
+    <Copy SourceFiles="..\wiimotelib-decompiled\bin\$(Configuration)\net8.0-windows\WiimoteLib.dll"
+          DestinationFiles="$(OutDir)WiimoteLib.dll" />
+    <Copy SourceFiles="..\wiimotelib-decompiled\LICENSE.BrianPeek.txt"
+          DestinationFiles="$(OutDir)LICENSE.WiimoteLib.txt" />
+  </Target>
+
+  <Target Name="UseSafeWiimoteLibAfterPublish" AfterTargets="Publish">
+    <Copy SourceFiles="..\wiimotelib-decompiled\bin\$(Configuration)\net8.0-windows\WiimoteLib.dll"
+          DestinationFiles="$(PublishDir)WiimoteLib.dll" />
+    <Copy SourceFiles="..\wiimotelib-decompiled\LICENSE.BrianPeek.txt"
+          DestinationFiles="$(PublishDir)LICENSE.WiimoteLib.txt" />
+  </Target>
+
+</Project>

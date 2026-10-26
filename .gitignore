@@ -1,0 +1,33 @@
+# .NET build output
+**/bin/
+**/obj/
+**/.vs/
+*.user
+*.suo
+
+# Unity generated and machine-local state
+**/Library/
+**/Logs/
+**/Temp/
+**/UserSettings/
+**/Build/
+**/Builds/
+
+# Local application data and packaged output
+**/data/
+**/outputs/
+**/tools/
+*.log
+*.zip
+
+# Secrets and local environment files
+.env
+.env.*
+*.pfx
+*.pem
+*.key
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+

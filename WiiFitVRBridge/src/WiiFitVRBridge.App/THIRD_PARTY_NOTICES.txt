@@ -1,0 +1,3 @@
+BalanceBoard.Core — reused from the local balance-board-controller project.
+WiimoteLib — Brian Peek and contributors; license is included in published output.
+VRChat is a trademark of VRChat Inc. This project is not affiliated with or endorsed by VRChat Inc.

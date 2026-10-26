@@ -1,0 +1,130 @@
+<Window x:Class="WiiFitLab.TiltMazeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Wii Fit Lab — 3Dバランス・テーブル"
+        Width="1130" Height="770" MinWidth="1060" MinHeight="720"
+        Background="{StaticResource PageBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="Yu Gothic UI" WindowStartupLocation="CenterOwner"
+        PreviewKeyDown="Window_PreviewKeyDown" PreviewKeyUp="Window_PreviewKeyUp">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="780" />
+            <ColumnDefinition Width="18" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Background="Black" CornerRadius="15" ClipToBounds="True"
+                BorderBrush="#31434B" BorderThickness="2">
+            <Grid>
+                <Image Source="Assets/balance-table-aurora.png" Stretch="UniformToFill" />
+                <Rectangle Fill="#42000614" />
+
+                <Viewport3D x:Name="SceneViewport" ClipToBounds="True">
+                    <Viewport3D.Camera>
+                        <PerspectiveCamera x:Name="SceneCamera"
+                                           Position="0,8.2,11.8"
+                                           LookDirection="0,-8.2,-11.8"
+                                           UpDirection="0,1,0"
+                                           FieldOfView="40" />
+                    </Viewport3D.Camera>
+                </Viewport3D>
+
+                <Grid VerticalAlignment="Top" Margin="22,18,22,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#DDF7FAFC" CornerRadius="18" Padding="18,7" HorizontalAlignment="Left">
+                        <TextBlock x:Name="LevelText" Text="レベル 1" Foreground="#38434A"
+                                   FontSize="18" FontWeight="SemiBold" />
+                    </Border>
+                    <Border Grid.Column="1" Background="#ED4B84E8" CornerRadius="18" Padding="16,5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="◷" Foreground="White" FontSize="23" Margin="0,-1,7,0" />
+                            <TextBlock x:Name="TimeText" Text="45" Foreground="White" FontSize="28" FontWeight="Bold" />
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" Background="#DDF7FAFC" CornerRadius="18" Padding="15,7" HorizontalAlignment="Right">
+                        <TextBlock x:Name="BallsText" Text="残り 1" Foreground="#38434A"
+                                   FontSize="17" FontWeight="SemiBold" />
+                    </Border>
+                </Grid>
+
+                <Border x:Name="MessagePanel" Width="350" Background="#EAF7FAFC" CornerRadius="18"
+                        Padding="24,17" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel>
+                        <TextBlock x:Name="MessageTitle" Text="3D BALANCE TABLE" Foreground="#3A6FC5"
+                                   FontSize="23" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="MessageText" Text="中心姿勢を記録してスタート" Foreground="#45545C"
+                                   FontSize="14" TextAlignment="Center" TextWrapping="Wrap"
+                                   HorizontalAlignment="Center" Margin="0,5,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,16"
+                        Background="#B8000000" CornerRadius="12" Padding="14,7">
+                    <TextBlock Text="テーブルそのものを傾け、すべての球を穴へ入れる" Foreground="White" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="3Dバランス・テーブル" FontSize="24" FontWeight="Bold" />
+                <TextBlock Text="浮遊する盤面を傾けて球を落とす" Foreground="{StaticResource MutedBrush}" />
+
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="15" Margin="0,14,0,0">
+                    <StackPanel>
+                        <TextBlock x:Name="SignalStatusText" Text="ボード信号待ち" Foreground="#F0A84A" />
+                        <Grid Margin="0,9,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="左右傾斜" Foreground="{StaticResource MutedBrush}" FontSize="11" />
+                                <TextBlock x:Name="TiltXText" Text="0 %" FontSize="19" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="前後傾斜" Foreground="{StaticResource MutedBrush}" FontSize="11" />
+                                <TextBlock x:Name="TiltYText" Text="0 %" FontSize="19" />
+                            </StackPanel>
+                        </Grid>
+                        <Button Content="現在の姿勢を水平にする" Click="CaptureCenter_Click" Margin="0,9,0,0" />
+                        <TextBlock Text="傾斜感度" Margin="0,10,0,1" />
+                        <Slider x:Name="SensitivitySlider" Minimum="1" Maximum="3" Value="1.7"
+                                TickFrequency="0.1" IsSnapToTickEnabled="True" />
+                        <TextBlock x:Name="SensitivityText" Text="1.7倍 / 最大傾斜 10°"
+                                   Foreground="{StaticResource MutedBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="15" Margin="0,10,0,0">
+                    <StackPanel>
+                        <Button x:Name="StartButton" Content="ゲーム開始" Click="StartButton_Click" IsEnabled="False" />
+                        <Grid Margin="0,7,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="7" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <Button Content="球を戻す" Click="ResetBalls_Click" Style="{StaticResource SecondaryButton}" />
+                            <Button Grid.Column="2" Content="レベル1へ" Click="ResetGame_Click" Style="{StaticResource SecondaryButton}" />
+                        </Grid>
+                        <TextBlock x:Name="GameStatusText" Text="水平姿勢を記録してください"
+                                   Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="15" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="ルール" FontWeight="SemiBold" />
+                        <TextBlock Text="盤面全体が前後左右へ傾き、球は重力と慣性で転がります。すべての球を黒い穴へ入れるとクリアです。"
+                                   Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,0" />
+                        <TextBlock Text="予備操作：矢印 / WASD&#x0a;Enter：開始・一時停止　R：球を戻す"
+                                   Foreground="#48D7C8" LineHeight="20" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#3A2C1D" CornerRadius="10" Padding="11" Margin="0,10,0,0">
+                    <TextBlock Text="安全：滑らない平らな場所で、壁や手すりに手が届く状態で小さく重心移動してください。"
+                               Foreground="#FFD08A" TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

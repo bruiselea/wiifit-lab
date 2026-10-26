@@ -1,0 +1,143 @@
+<Window x:Class="WiiFitLab.PedalWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Wii Fit Lab — 疑似ペダル"
+        Width="920" Height="720" MinWidth="780" MinHeight="650"
+        Background="{StaticResource PageBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="Yu Gothic UI" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style TargetType="ProgressBar">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Background" Value="#0D1520" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style TargetType="Slider">
+            <Setter Property="Margin" Value="0,4,0,0" />
+        </Style>
+    </Window.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="26">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="18" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="18" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="18" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="疑似アクセル・ブレーキ" FontSize="28" FontWeight="Bold" />
+                    <TextBlock Text="座って使用：左足をブレーキ、右足をアクセルとして踏力を測定"
+                               Foreground="{StaticResource MutedBrush}" Margin="0,3,0,0" />
+                </StackPanel>
+                <Border Grid.Column="1" Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="14,9">
+                    <TextBlock x:Name="SignalStatusText" Text="信号待ち" Foreground="#F0A84A" />
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="左足・ブレーキ" FontSize="18" FontWeight="SemiBold" />
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,8">
+                            <TextBlock x:Name="BrakePercentText" Text="0" FontSize="50" FontWeight="Bold" />
+                            <TextBlock Text="%" FontSize="20" Margin="8,22,0,0" Foreground="{StaticResource MutedBrush}" />
+                            <TextBlock x:Name="BrakeLoadText" Text="0.0 kg" Margin="18,27,0,0" Foreground="{StaticResource MutedBrush}" />
+                        </StackPanel>
+                        <ProgressBar x:Name="BrakeProgress" Maximum="100" Foreground="#FF6B7A" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="右足・アクセル" FontSize="18" FontWeight="SemiBold" />
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,8">
+                            <TextBlock x:Name="AcceleratorPercentText" Text="0" FontSize="50" FontWeight="Bold" />
+                            <TextBlock Text="%" FontSize="20" Margin="8,22,0,0" Foreground="{StaticResource MutedBrush}" />
+                            <TextBlock x:Name="AcceleratorLoadText" Text="0.0 kg" Margin="18,27,0,0" Foreground="{StaticResource MutedBrush}" />
+                        </StackPanel>
+                        <ProgressBar x:Name="AcceleratorProgress" Maximum="100" Foreground="#48D7C8" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="4" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="18" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="3ステップ校正" FontSize="17" FontWeight="SemiBold" />
+                        <TextBlock Text="足を普段どおり置いた状態を基準にし、その後左右を別々に強く踏みます。"
+                                   Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,4,0,12" />
+                        <WrapPanel>
+                            <Button Content="1  基準を記録" Click="CaptureRest_Click" Margin="0,0,8,8" />
+                            <Button Content="2  左最大" Click="CaptureBrakeMax_Click" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" />
+                            <Button Content="3  右最大" Click="CaptureAcceleratorMax_Click" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" />
+                            <Button Content="リセット" Click="ResetCalibration_Click" Style="{StaticResource SecondaryButton}" Margin="0,0,0,8" />
+                        </WrapPanel>
+                    </StackPanel>
+                    <Border Grid.Column="2" Background="{StaticResource PanelAltBrush}" CornerRadius="10" Padding="14">
+                        <StackPanel>
+                            <TextBlock Text="記録値" FontWeight="SemiBold" />
+                            <TextBlock x:Name="CalibrationText" Text="基準 — / — kg&#x0a;最大 — / — kg"
+                                       Foreground="{StaticResource MutedBrush}" Margin="0,7,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="6" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*" />
+                        <ColumnDefinition Width="18" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="ゲーム出力" FontSize="17" FontWeight="SemiBold" />
+                        <ComboBox x:Name="OutputModeCombo" SelectedIndex="0" Margin="0,9,0,9"
+                                  SelectionChanged="OutputModeCombo_SelectionChanged">
+                            <ComboBoxItem Content="表示のみ（安全テスト）" />
+                            <ComboBoxItem Content="キーボード：右=W / 左=S" />
+                            <ComboBoxItem Content="vJoyアナログ：Z=アクセル / Rz=ブレーキ" />
+                        </ComboBox>
+                        <CheckBox x:Name="OutputEnabledCheckBox" Content="出力を有効にする" IsEnabled="False"
+                                  Checked="OutputEnabledCheckBox_Changed" Unchecked="OutputEnabledCheckBox_Changed" />
+                        <TextBlock x:Name="OutputStatusText" Text="3ステップ校正後に有効化できます"
+                                   Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,7,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="デッドゾーン" />
+                        <Slider x:Name="DeadzoneSlider" Minimum="0" Maximum="20" Value="5" TickFrequency="1"
+                                ValueChanged="TuningSlider_ValueChanged" />
+                        <TextBlock x:Name="DeadzoneText" Text="5 %" Foreground="{StaticResource MutedBrush}" />
+                        <TextBlock Text="キーONしきい値" Margin="0,10,0,0" />
+                        <Slider x:Name="KeyboardThresholdSlider" Minimum="5" Maximum="80" Value="15" TickFrequency="5"
+                                ValueChanged="TuningSlider_ValueChanged" />
+                        <TextBlock x:Name="KeyboardThresholdText" Text="15 %" Foreground="{StaticResource MutedBrush}" />
+                        <TextBlock Text="反応曲線" Margin="0,10,0,3" />
+                        <ComboBox x:Name="ResponseCurveCombo" SelectedIndex="1">
+                            <ComboBoxItem Content="敏感" />
+                            <ComboBoxItem Content="リニア" />
+                            <ComboBoxItem Content="精密" />
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Window>

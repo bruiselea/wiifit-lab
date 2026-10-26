@@ -1,0 +1,187 @@
+<Window x:Class="WiiFitVRBridge.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Wii Balance VR Bridge" Width="1220" Height="790" MinWidth="1100" MinHeight="720"
+        Background="{StaticResource PageBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="Yu Gothic UI" WindowStartupLocation="CenterScreen">
+    <Grid Margin="22">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2.15*" />
+            <ColumnDefinition Width="18" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="14" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="14" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <StackPanel>
+                    <TextBlock Text="Wii Balance VR Bridge" FontSize="31" FontWeight="Bold" />
+                    <TextBlock Text="Balance BoardをVRChat公式OSC移動入力へ変換" Foreground="{StaticResource MutedBrush}" />
+                </StackPanel>
+                <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="{StaticResource PanelBrush}"
+                        CornerRadius="18" Padding="15,8">
+                    <TextBlock x:Name="BridgeStateText" Text="● 安全停止中" Foreground="#F0A84A" FontWeight="SemiBold" />
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" /><ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" /><ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="WalkingModeButton" Click="WalkingModeButton_Click" Padding="14">
+                    <StackPanel>
+                        <TextBlock Text="F8  WALK" FontSize="19" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock Text="左右の足踏み" FontSize="12" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="SkiModeButton" Grid.Column="2" Click="SkiModeButton_Click" Padding="14">
+                    <StackPanel>
+                        <TextBlock Text="F9  SKI" FontSize="19" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock Text="平行スタンス" FontSize="12" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="SnowboardModeButton" Grid.Column="4" Click="SnowboardModeButton_Click" Padding="14">
+                    <StackPanel>
+                        <TextBlock Text="F10  SNOWBOARD" FontSize="19" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock Text="ボードを90°回す" FontSize="12" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="12" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="18">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*" /><ColumnDefinition Width="1*" /><ColumnDefinition Width="1*" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="BOARD" Foreground="{StaticResource MutedBrush}" FontSize="11" />
+                            <TextBlock x:Name="BoardStatusText" Text="ボードを検索中" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock x:Name="WeightText" Text="0.0 kg" FontSize="28" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="OSC OUTPUT" Foreground="{StaticResource MutedBrush}" FontSize="11" />
+                            <TextBlock x:Name="VerticalText" Text="Vertical  0.00" FontSize="18" Margin="0,4,0,0" />
+                            <ProgressBar x:Name="VerticalBar" Minimum="0" Maximum="1" Height="9" Margin="0,7,18,0" />
+                            <TextBlock x:Name="HorizontalText" Text="Horizontal  0.00" FontSize="18" Margin="0,8,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="CENTER OF PRESSURE" Foreground="{StaticResource MutedBrush}" FontSize="11" />
+                            <TextBlock x:Name="BalanceXText" Text="X 50.0 %" FontSize="18" Margin="0,4,0,0" />
+                            <TextBlock x:Name="BalanceYText" Text="Y 50.0 %" FontSize="18" Margin="0,6,0,0" />
+                            <TextBlock x:Name="StepText" Text="歩数 0" Foreground="#8DE8FF" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="1.08*" /><ColumnDefinition Width="12" /><ColumnDefinition Width="1*" /></Grid.ColumnDefinitions>
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="1  ボード接続" FontSize="19" FontWeight="Bold" />
+                            <TextBlock Text="通常は前面の電源ボタンだけで復帰します。SYNCはWindowsのペアリングが消えた時だけ使います。"
+                                       Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,10" />
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="8" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <Button x:Name="ConnectButton" Content="再接続" Click="ConnectButton_Click" />
+                                <Button Grid.Column="2" Content="切断" Click="DisconnectButton_Click" Style="{StaticResource SecondaryButton}" />
+                            </Grid>
+
+                            <Separator Margin="0,16" Background="#2B4258" />
+                            <TextBlock Text="2  ニュートラル校正" FontSize="19" FontWeight="Bold" />
+                            <TextBlock x:Name="PlacementText" Text="通常向きで自然に立ち、1.2秒ほど静止します。"
+                                       Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,5,0,9" />
+                            <Button Content="現在の姿勢を記録" Click="CalibrateButton_Click" />
+                            <TextBlock x:Name="CalibrationText" Text="未校正" Foreground="#F0A84A" Margin="0,7,0,0" />
+
+                            <Separator Margin="0,16" Background="#2B4258" />
+                            <TextBlock Text="3  VRChat出力" FontSize="19" FontWeight="Bold" />
+                            <Button x:Name="OutputButton" Content="VRChat出力ON" Click="OutputButton_Click" Margin="0,9,0,0" />
+                            <Button Content="F12  緊急停止" Click="EmergencyStopButton_Click" Background="#FF6478" Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="モード調整" FontSize="19" FontWeight="Bold" />
+                            <TextBlock Text="感度" Margin="0,10,0,2" />
+                            <Slider x:Name="SensitivitySlider" Minimum="0.5" Maximum="3" Value="1"
+                                    TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="SensitivitySlider_ValueChanged" />
+                            <TextBlock x:Name="SensitivityText" Text="1.0倍" Foreground="{StaticResource MutedBrush}" />
+                            <TextBlock Text="最大出力" Margin="0,10,0,2" />
+                            <Slider x:Name="MaximumOutputSlider" Minimum="0.25" Maximum="1" Value="1"
+                                    TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="MaximumOutputSlider_ValueChanged" />
+                            <TextBlock x:Name="MaximumOutputText" Text="100 %" Foreground="{StaticResource MutedBrush}" />
+                            <CheckBox x:Name="InvertHorizontalCheck" Content="左右・エッジ方向を反転" Margin="0,11,0,0"
+                                      Checked="ProfileOption_Changed" Unchecked="ProfileOption_Changed" />
+                            <CheckBox x:Name="InvertVerticalCheck" Content="前後・前足方向を反転" Margin="0,7,0,0"
+                                      Checked="ProfileOption_Changed" Unchecked="ProfileOption_Changed" />
+                            <StackPanel x:Name="StancePanel" Visibility="Collapsed" Margin="0,11,0,0">
+                                <TextBlock Text="スノーボード・スタンス" />
+                                <ComboBox x:Name="StanceCombo" SelectedIndex="0" Margin="0,4,0,0" SelectionChanged="StanceCombo_SelectionChanged">
+                                    <ComboBoxItem Content="レギュラー（左足が前）" />
+                                    <ComboBoxItem Content="グーフィー（右足が前）" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <Separator Margin="0,16" Background="#2B4258" />
+                            <TextBlock Text="セット方法" FontWeight="Bold" />
+                            <TextBlock x:Name="ModeGuideText" Text="左右の足へ交互に荷重を移します。大きく足を上げる必要はありません。"
+                                       Foreground="#CDE1EC" TextWrapping="Wrap" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="VRChat" FontSize="23" FontWeight="Bold" />
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="13" Padding="15" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock x:Name="VrchatStatusText" Text="VRChatを確認中" Foreground="#F0A84A" />
+                        <TextBlock x:Name="OscTargetText" Text="127.0.0.1:9000" FontSize="20" Margin="0,5,0,0" />
+                        <Button Content="OSCQueryで再検出" Click="DiscoverOscButton_Click" Style="{StaticResource SecondaryButton}" Margin="0,9,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#17314A" CornerRadius="13" Padding="15" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="VRChat側の準備" FontWeight="Bold" Foreground="#8DE8FF" />
+                        <TextBlock Text="Action Menu → Options → OSC → Enabled をONにします。Bridgeは公式のVertical / Horizontal入力だけを使用します。"
+                                   TextWrapping="Wrap" Foreground="#D4E8F2" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{StaticResource PanelBrush}" CornerRadius="13" Padding="15" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="4センサー" FontWeight="Bold" />
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <StackPanel><TextBlock Text="前左" Foreground="{StaticResource MutedBrush}" /><TextBlock x:Name="TopLeftText" Text="0.0 kg" FontSize="18" /></StackPanel>
+                            <StackPanel Grid.Column="1"><TextBlock Text="前右" Foreground="{StaticResource MutedBrush}" /><TextBlock x:Name="TopRightText" Text="0.0 kg" FontSize="18" /></StackPanel>
+                            <StackPanel Margin="0,48,0,0"><TextBlock Text="後左" Foreground="{StaticResource MutedBrush}" /><TextBlock x:Name="BottomLeftText" Text="0.0 kg" FontSize="18" /></StackPanel>
+                            <StackPanel Grid.Column="1" Margin="0,48,0,0"><TextBlock Text="後右" Foreground="{StaticResource MutedBrush}" /><TextBlock x:Name="BottomRightText" Text="0.0 kg" FontSize="18" /></StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#3A2C1D" CornerRadius="11" Padding="12" Margin="0,10,0,0">
+                    <TextBlock Text="安全：滑らない平らな床で、壁や手すりに手が届く範囲に置いてください。ボード上ではジャンプしません。"
+                               Foreground="#FFD08A" TextWrapping="Wrap" />
+                </Border>
+
+                <TextBlock x:Name="StatusDetailText" Text="起動中…" Foreground="{StaticResource MutedBrush}"
+                           TextWrapping="Wrap" Margin="2,12,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

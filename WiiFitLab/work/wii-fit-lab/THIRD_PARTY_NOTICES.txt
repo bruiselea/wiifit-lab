@@ -1,0 +1,9 @@
+Wii Fit Lab uses components from Balance Board Controller.
+Copyright (c) 2026 Balance Board Controller contributors.
+Licensed under the MIT License: https://github.com/Vabian124/balance-board-controller
+
+Balance Board Controller includes WiimoteLib for Nintendo Wii HID communication.
+See the accompanying license notices and upstream project for details.
+
+Wii, Wii Fit, and Nintendo are trademarks of Nintendo. This project is not
+affiliated with or endorsed by Nintendo.
